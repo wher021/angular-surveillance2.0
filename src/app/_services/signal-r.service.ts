@@ -26,7 +26,7 @@ private hubConnection: signalR.HubConnection
 //localhost:8888
                             this.hubConnection = new signalR.HubConnectionBuilder()
     .configureLogging(signalR.LogLevel.Debug)
-    .withUrl("http://192.168.0.8:4444/myhub", {
+    .withUrl("http://192.168.1.211:4444/myhub", {
       skipNegotiation: true,
       transport: signalR.HttpTransportType.WebSockets
     })

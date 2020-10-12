@@ -25,8 +25,8 @@ export class HomeComponent implements OnInit{
          //Call this method in the image source, it will sanitize it.
    transform()
    {
-     return this.sanitizer.bypassSecurityTrustResourceUrl(this.base64Image2);
-     //return this.sanitizer.bypassSecurityTrustResourceUrl('data:image/jpg;base64, ' + this.signalRService.picture1);
+     //return this.sanitizer.bypassSecurityTrustResourceUrl(this.base64Image2);
+     return this.sanitizer.bypassSecurityTrustResourceUrl('data:image/jpg;base64, ' + this.signalRService.picture1);
    }
    transform2()
    {
