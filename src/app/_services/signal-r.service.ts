@@ -24,9 +24,10 @@ private hubConnection: signalR.HubConnection
 
 //"http://homesecvas.hopto.org:4444/myhub"
 //localhost:8888
+//84.217.102.137
                             this.hubConnection = new signalR.HubConnectionBuilder()
     .configureLogging(signalR.LogLevel.Debug)
-    .withUrl("http://192.168.1.211:4444/myhub", {
+    .withUrl("http://84.217.102.137:4444/myhub", {
       skipNegotiation: true,
       transport: signalR.HttpTransportType.WebSockets
     })
@@ -57,6 +58,7 @@ private hubConnection: signalR.HubConnection
 
   public broadcastChartData = (data: string) => 
   {
+    console.log(data);
     this.hubConnection.invoke('broadcastchartdata', data)
     .catch(err => console.error(err));
   }

@@ -20,13 +20,17 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { fakeBackendProvider } from './_helpers/fake-backend';
 import { RegisterComponent } from './account/register.component';
 
+import { SafeHtmlPipe } from './shared/shit'
+
 
 @NgModule({
   declarations: [
     AppComponent,
     WComponent,
     LoginComponent,
-    RegisterComponent
+    RegisterComponent,
+    HomeComponent,
+    SafeHtmlPipe
   ],
   imports: [
     HttpClientModule,

@@ -11,4 +11,19 @@
           <th><img [src]="transform2()" height="480" width="848" alt=""></th>
         </tr>
     </table>
+    <body>
+      <a download="FILENAME.jpg" [href]="transform2()">Download</a>
+      <div [innerHTML]="tool | safeHtml"></div>
+    </body>
+    <div class="grid-container">
+        <div class="grid-item">1</div>
+        <div class="grid-item"><button button type="submit" style="font-size:50px; width: 100%; height: 100px;" (click)="sendMsg('1')">Up</button></div>
+        <div class="grid-item">3</div>  
+        <div class="grid-item"><button button type="submit" style="font-size:50px; width: 100%; height: 100px;" (click)="sendMsg('3')">Left</button></div>
+        <div class="grid-item">5</div>
+        <div class="grid-item"><button button type="submit" style="font-size:50px; width: 100%; height: 100px;" (click)="sendMsg('4')">Right</button></div>  
+        <div class="grid-item">7</div>
+        <div class="grid-item"><button button type="submit" style="font-size:50px; width: 100%; height: 100px;" (click)="sendMsg('2')">Down</button></div>
+        <div class="grid-item">9</div>  
+      </div>
 </div>
