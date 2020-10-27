@@ -6,14 +6,17 @@
     </div>
     <table>
         <tr>
-          <th><img [src]="transform()" height="480" width="848" alt=""></th>
+          <th><img [src]="transform()" height="480" width="848" alt="shitme"></th>
           <th>PlaceHolder</th>
-          <th><img [src]="transform2()" height="480" width="848" alt=""></th>
+          <th><img [src]="transform2()" height="480" width="848" alt="shitme2"></th>
         </tr>
     </table>
     <body>
+
+      <button button type="submit" style="font-size:50px; width: 100%; height: 100px;" (click)="getAllRecords()">GetRecords</button>
       <a download="FILENAME.jpg" [href]="transform2()">Download</a>
       <div [innerHTML]="tool | safeHtml"></div>
+
     </body>
     <div class="grid-container">
         <div class="grid-item">1</div>

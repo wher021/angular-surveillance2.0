@@ -3,15 +3,19 @@ import { DomSanitizer } from '@angular/platform-browser';
 import {AccountService} from '../_services/account.service'
 import { User } from '../_models/user';
 import { SignalRService } from '../_services/signal-r.service';
-import { HttpClient } from '@angular/common/http';
+import { FtpService } from '../_services/ftp.service';
+import { IFtpResult } from '../ftp/ftp.result';
 
 @Component({ templateUrl: 'home.component.html' })
 
 export class HomeComponent implements OnInit{
     user: User;
     tool: string;
+    products: IFtpResult[] = [];
+    errorMessage: string;
+    image1: string;
 
-    constructor(private accountService: AccountService, public signalRService: SignalRService, private http: HttpClient, public sanitizer:DomSanitizer ) 
+    constructor(private accountService: AccountService, public signalRService: SignalRService, public sanitizer:DomSanitizer, private ftpService:FtpService ) 
     {
         this.user = this.accountService.userValue;
     }
@@ -19,32 +23,57 @@ export class HomeComponent implements OnInit{
     ngOnInit() {
         this.signalRService.startConnection();
         this.signalRService.addTransferChartDataListener();   
-        //this.startHttpRequest();
+        this.tool = "";
       }
 
       public sendMsg(data: string) 
       {
-        
         console.log(event);
         this.signalRService.broadcastChartData(data);
         this.tool = '<a download="shit.jpg" href=' + this.base64Image2 + '>Download2</a>';
         
       }
 
-      public get inputpdf() {
-        return this.sanitizer.bypassSecurityTrustHtml('data:image/jpg;base64, ' + this.signalRService.picture2);
-     }
+      public getAllRecords()
+      {
+        this.tool = "";
+        this.ftpService.getProducts().subscribe({
+          next: products => {
+            this.products = products;
+
+            ///generate html
+            var i = 0;
+            this.products.forEach( (element) => {
+              this.tool += '<a download="shit.jpg" href=' + element.imageUrl + '>Download' + i + '</a>'
+              i++;
+          });
+
+          },
+          error: err => this.errorMessage = err
+        });
+      }
+
+      defaultImage()
+      {
+        return this.sanitizer.bypassSecurityTrustResourceUrl(this.base64Image2);
+      }
     
          //Call this method in the image source, it will sanitize it.
    transform()
    {
      //return this.sanitizer.bypassSecurityTrustResourceUrl(this.base64Image2);
+     if(this.signalRService.picture1 == undefined)
+     {
+       return this.sanitizer.bypassSecurityTrustResourceUrl(this.base64Image2); 
+     }
      return this.sanitizer.bypassSecurityTrustResourceUrl('data:image/jpg;base64, ' + this.signalRService.picture1);
    }
    transform2()
    {
-     //return this.sanitizer.bypassSecurityTrustResourceUrl(this.base64Image);
-     
+    if(this.signalRService.picture2 == undefined)
+    {
+      return this.sanitizer.bypassSecurityTrustResourceUrl(this.base64Image2); 
+    }     
      return this.sanitizer.bypassSecurityTrustResourceUrl('data:image/jpg;base64, ' + this.signalRService.picture2);
    }
 
