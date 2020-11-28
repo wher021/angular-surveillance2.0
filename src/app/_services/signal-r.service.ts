@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import * as signalR from "@aspnet/signalr";
+import {BehaviorSubject, Observable} from 'rxjs';
 
 export interface ChartModel {
   data: [],
@@ -14,9 +15,21 @@ export class SignalRService {
   public picture1: string;
   public picture2: string;
   public source: string;
+  public sensor1: string;
+  public sensor2: string;
+  
+  private hubConnection: signalR.HubConnection
  
-private hubConnection: signalR.HubConnection
- 
+  private routerInfo: BehaviorSubject<string>;
+
+  constructor() {
+    this.routerInfo = new BehaviorSubject<string>("shit");
+  }
+
+  getValue(): Observable<string> {
+    return this.routerInfo.asObservable();
+  }
+
   public startConnection = () => {
     //this.hubConnection = new signalR.HubConnectionBuilder()
      //                       .withUrl('http://127.0.0.1:54225/myhub')//needs to be server adress
@@ -24,10 +37,10 @@ private hubConnection: signalR.HubConnection
 
 //"http://homesecvas.hopto.org:4444/myhub"
 //localhost:8888
-//84.217.102.137
+//84.217.102.137:4444
                             this.hubConnection = new signalR.HubConnectionBuilder()
     .configureLogging(signalR.LogLevel.Debug)
-    .withUrl("http://84.217.102.137:4444/myhub", {
+    .withUrl("http://localhost:8888/myhub", {
       skipNegotiation: true,
       transport: signalR.HttpTransportType.WebSockets
     })
@@ -52,6 +65,11 @@ private hubConnection: signalR.HubConnection
       else if(this.source == "s2"){
         this.picture2 = data["payload"];
       }
+      else
+      {
+        this.routerInfo.next(data);
+      }
+      
 
     });
   }

@@ -14,6 +14,10 @@ export class HomeComponent implements OnInit{
     products: IFtpResult[] = [];
     errorMessage: string;
     image1: string;
+    fileStoreActive: boolean;
+
+    sensor1: string;
+    sensor2: string;
 
     constructor(private accountService: AccountService, public signalRService: SignalRService, public sanitizer:DomSanitizer, private ftpService:FtpService ) 
     {
@@ -24,14 +28,30 @@ export class HomeComponent implements OnInit{
         this.signalRService.startConnection();
         this.signalRService.addTransferChartDataListener();   
         this.tool = "";
+        this.fileStoreActive = true;
+        this.sensor1 = "off";
+        this.sensor2 = "off";
+
+        this.signalRService.getValue().subscribe((value) => {
+
+          if(value["source"] == "sensor1")
+          {
+            var jsonObj = JSON.parse(value["payload"]);
+            this.sensor1 = jsonObj["status"];
+          }
+          else if(value["source"] == "sensor2")
+          {
+            var jsonObj = JSON.parse(value["payload"]);
+            this.sensor2 = jsonObj["status"];
+          }
+
+        });
       }
 
       public sendMsg(data: string) 
       {
         console.log(event);
-        this.signalRService.broadcastChartData(data);
-        this.tool = '<a download="shit.jpg" href=' + this.base64Image2 + '>Download2</a>';
-        
+        this.signalRService.broadcastChartData(data);        
       }
 
       public getAllRecords()
@@ -53,9 +73,21 @@ export class HomeComponent implements OnInit{
         });
       }
 
-      defaultImage()
+
+      setSaving(element, mybool)
       {
-        return this.sanitizer.bypassSecurityTrustResourceUrl(this.base64Image2);
+
+        //fetch current recording state from server
+        this.fileStoreActive = !this.fileStoreActive;
+        if(!this.fileStoreActive)
+        {
+          element.textContent = "Recording Mode = Off";
+        }
+        else{
+          element.textContent = "Recording Mode = On";
+        }
+
+        //element.disabled = true;
       }
     
          //Call this method in the image source, it will sanitize it.
