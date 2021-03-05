@@ -40,7 +40,7 @@ export class SignalRService {
 //84.217.102.137:4444
                             this.hubConnection = new signalR.HubConnectionBuilder()
     .configureLogging(signalR.LogLevel.Debug)
-    .withUrl("http://localhost:8888/myhub", {
+    .withUrl("http://192.168.1.156:45455/myhub", {
       skipNegotiation: true,
       transport: signalR.HttpTransportType.WebSockets
     })
@@ -64,6 +64,10 @@ export class SignalRService {
       }
       else if(this.source == "s2"){
         this.picture2 = data["payload"];
+      }
+      else if(this.source == "pirstair")
+      {
+        this.routerInfo.next(data);
       }
       else
       {

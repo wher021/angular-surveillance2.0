@@ -18,6 +18,7 @@ export class HomeComponent implements OnInit{
 
     sensor1: string;
     sensor2: string;
+    pirsensorstair: string;
 
     constructor(private accountService: AccountService, public signalRService: SignalRService, public sanitizer:DomSanitizer, private ftpService:FtpService ) 
     {
@@ -31,6 +32,7 @@ export class HomeComponent implements OnInit{
         this.fileStoreActive = true;
         this.sensor1 = "off";
         this.sensor2 = "off";
+        this.pirsensorstair = "off";
 
         this.signalRService.getValue().subscribe((value) => {
 
@@ -43,6 +45,11 @@ export class HomeComponent implements OnInit{
           {
             var jsonObj = JSON.parse(value["payload"]);
             this.sensor2 = jsonObj["status"];
+          }
+          else if(value["source"] == "pirstair")
+          {
+            this.pirsensorstair = value["payload"];
+         
           }
 
         });
