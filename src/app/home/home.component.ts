@@ -5,6 +5,7 @@ import { User } from '../_models/user';
 import { SignalRService } from '../_services/signal-r.service';
 import { FtpService } from '../_services/ftp.service';
 import { IFtpResult } from '../ftp/ftp.result';
+import { HttpService } from '../_services/http.service';
 
 @Component({ templateUrl: 'home.component.html' })
 
@@ -15,11 +16,12 @@ export class HomeComponent implements OnInit{
     errorMessage: string;
     image1: string;
     fileStoreActive: boolean;
-
+    cabinetLight: boolean;
     sensor1: string;
     sensor2: string;
+    httpResponse: any
 
-    constructor(private accountService: AccountService, public signalRService: SignalRService, public sanitizer:DomSanitizer, private ftpService:FtpService ) 
+    constructor(private accountService: AccountService, public signalRService: SignalRService, public sanitizer:DomSanitizer, private ftpService:FtpService, private httpService:HttpService ) 
     {
         this.user = this.accountService.userValue;
     }
@@ -46,6 +48,8 @@ export class HomeComponent implements OnInit{
           }
 
         });
+
+        console.log("SHIT SERVER STARTED");
       }
 
       public sendMsg(data: string) 
@@ -71,6 +75,50 @@ export class HomeComponent implements OnInit{
           },
           error: err => this.errorMessage = err
         });
+      }
+
+      offAlarm(element, mybool)
+      {
+        this.httpService.pingServer("http://192.168.1.102?sss:off").subscribe({
+          next: response => {
+            this.httpResponse = response;
+
+          },
+          error: err => this.errorMessage = err
+        });
+        //element.disabled = true;
+      }
+      onAlarm(element, mybool)
+      {
+        this.httpService.pingServer("http://192.168.1.102?sss:on").subscribe({
+          next: response => {
+            this.httpResponse = response;
+
+          },
+          error: err => this.errorMessage = err
+        });
+      }
+
+      setCabinet(element, mybool)
+      {
+        this.httpService.simpleGetRequest("http://81.227.13.176:4444/api/CamServer/cabinet").subscribe({
+          next: response => {
+            this.httpResponse = response;
+          },
+          error: err => this.errorMessage = err
+        });
+        //element.disabled = true;
+      }
+
+      resetCamera(element)
+      {
+        this.httpService.simpleGetRequest("http://81.227.13.176:4444/api/CamServer/reset-camera").subscribe({
+          next: response => {
+            this.httpResponse = response;
+          },
+          error: err => this.errorMessage = err
+        });
+        //element.disabled = true;
       }
 
 
@@ -107,6 +155,14 @@ export class HomeComponent implements OnInit{
       return this.sanitizer.bypassSecurityTrustResourceUrl(this.base64Image2); 
     }     
      return this.sanitizer.bypassSecurityTrustResourceUrl('data:image/jpg;base64, ' + this.signalRService.picture2);
+   }
+   transform3()
+   {
+    if(this.signalRService.picture3 == undefined)
+    {
+      return this.sanitizer.bypassSecurityTrustResourceUrl(this.base64Image2); 
+    }     
+     return this.sanitizer.bypassSecurityTrustResourceUrl('data:image/jpg;base64, ' + this.signalRService.picture3);
    }
 
    htmlStr2: string = 'data:image/jpg;base64, ' + this.signalRService.picture2;
