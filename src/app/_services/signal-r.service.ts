@@ -40,7 +40,7 @@ export class SignalRService {
 //84.217.102.137:4444
                             this.hubConnection = new signalR.HubConnectionBuilder()
     .configureLogging(signalR.LogLevel.Debug)
-    .withUrl("http://192.168.1.156:45455/myhub", {
+    .withUrl("http://192.168.1.127:4444/myhub", {
       skipNegotiation: true,
       transport: signalR.HttpTransportType.WebSockets
     })
