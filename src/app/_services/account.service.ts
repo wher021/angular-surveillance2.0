@@ -24,6 +24,7 @@ export class AccountService {
 
     login(username, password) {
 
+
         return this.http.post<User>(`http://192.168.1.127:4000/users/authenticate`, { username, password })
 
             .pipe(map(user => {

@@ -83,9 +83,11 @@ export class SignalRService {
       else if(this.source == "s2"){
         this.picture2 = data["payload"];
       }
+
       else if(this.source == "pirstair")
       {
         this.routerInfo.next(data);
+
       }
       else
       {
