@@ -5,6 +5,7 @@ import { User } from '../_models/user';
 import { SignalRService } from '../_services/signal-r.service';
 import { FtpService } from '../_services/ftp.service';
 import { IFtpResult } from '../ftp/ftp.result';
+import { HttpService } from '../_services/http.service';
 
 @Component({ templateUrl: 'home.component.html' })
 
@@ -18,9 +19,13 @@ export class HomeComponent implements OnInit{
 
     sensor1: string;
     sensor2: string;
+
     pirsensorstair: string;
 
-    constructor(private accountService: AccountService, public signalRService: SignalRService, public sanitizer:DomSanitizer, private ftpService:FtpService ) 
+    httpResponse: any
+
+
+    constructor(private accountService: AccountService, public signalRService: SignalRService, public sanitizer:DomSanitizer, private ftpService:FtpService, private httpService:HttpService ) 
     {
         this.user = this.accountService.userValue;
     }
@@ -53,6 +58,8 @@ export class HomeComponent implements OnInit{
           }
 
         });
+
+        console.log("SHIT SERVER STARTED");
       }
 
       public sendMsg(data: string) 
@@ -78,6 +85,19 @@ export class HomeComponent implements OnInit{
           },
           error: err => this.errorMessage = err
         });
+      }
+
+
+
+      resetCamera(element)
+      {
+        this.httpService.simpleGetRequest("http://81.227.13.176:4444/api/CamServer/reset-camera").subscribe({
+          next: response => {
+            this.httpResponse = response;
+          },
+          error: err => this.errorMessage = err
+        });
+        //element.disabled = true;
       }
 
 
@@ -114,6 +134,7 @@ export class HomeComponent implements OnInit{
       return this.sanitizer.bypassSecurityTrustResourceUrl(this.base64Image2); 
     }     
      return this.sanitizer.bypassSecurityTrustResourceUrl('data:image/jpg;base64, ' + this.signalRService.picture2);
+
    }
 
    htmlStr2: string = 'data:image/jpg;base64, ' + this.signalRService.picture2;
