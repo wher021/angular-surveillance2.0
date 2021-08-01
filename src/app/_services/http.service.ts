@@ -13,12 +13,15 @@ export class HttpService {
   constructor(private http: HttpClient) { }
 
 
-  pingServer(productUrl : string): Observable<any> {
-    return this.http.post(productUrl, "")
-        .pipe(
-            tap(data => console.log('All: ' + JSON.stringify(data))),
-            catchError(this.handleError)
-            );
+  pingServer(productUrl : string, payload : string): Observable<any> {
+    
+    const headers = { 'content-type': 'application/json'}  
+    console.log(payload)
+    
+    return this.http.post(productUrl, payload,{'headers':headers}).pipe(
+      tap(data => console.log('All: ' + JSON.stringify(data))),
+      catchError(this.handleError)
+      );
   }
 
   simpleGetRequest(url : string): Observable<any> {

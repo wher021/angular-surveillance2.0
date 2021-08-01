@@ -7,6 +7,8 @@ import { FtpService } from '../_services/ftp.service';
 import { IFtpResult } from '../ftp/ftp.result';
 import { HttpService } from '../_services/http.service';
 
+import { PayloadDto } from '../models/payload';
+
 @Component({ templateUrl: 'home.component.html' })
 
 export class HomeComponent implements OnInit{
@@ -20,6 +22,8 @@ export class HomeComponent implements OnInit{
     sensor1: string;
     sensor2: string;
     httpResponse: any
+    btnColour: string
+    notificationLabel: string;
 
     constructor(private accountService: AccountService, public signalRService: SignalRService, public sanitizer:DomSanitizer, private ftpService:FtpService, private httpService:HttpService ) 
     {
@@ -27,12 +31,15 @@ export class HomeComponent implements OnInit{
     }
 
     ngOnInit() {
+        this.getNotificationSystem();
         this.signalRService.startConnection();
         this.signalRService.addTransferChartDataListener();   
         this.tool = "";
         this.fileStoreActive = true;
         this.sensor1 = "off";
         this.sensor2 = "off";
+
+        this.btnColour= 'red'
 
         this.signalRService.getValue().subscribe((value) => {
 
@@ -46,6 +53,10 @@ export class HomeComponent implements OnInit{
             var jsonObj = JSON.parse(value["payload"]);
             this.sensor2 = jsonObj["status"];
           }
+          else if(value["source"] == "alarm")
+          {
+            this.btnColour = value["payload"] == "on" ? "green ": "red";
+          }
 
         });
 
@@ -55,6 +66,7 @@ export class HomeComponent implements OnInit{
       public sendMsg(data: string) 
       {
         console.log(event);
+
         this.signalRService.broadcastChartData(data);        
       }
 
@@ -79,7 +91,12 @@ export class HomeComponent implements OnInit{
 
       offAlarm(element, mybool)
       {
-        this.httpService.pingServer("http://192.168.1.102?sss:off").subscribe({
+
+        var payload = new PayloadDto();
+        payload.source = "alarm";
+        payload.payload = "off";
+
+        this.httpService.pingServer("http://90.226.151.36:4444/api/CamServer/alarm",  JSON.stringify(payload)).subscribe({
           next: response => {
             this.httpResponse = response;
 
@@ -90,7 +107,12 @@ export class HomeComponent implements OnInit{
       }
       onAlarm(element, mybool)
       {
-        this.httpService.pingServer("http://192.168.1.102?sss:on").subscribe({
+
+        var payload = new PayloadDto();
+        payload.source = "alarm";
+        payload.payload = "on";
+
+        this.httpService.pingServer("http://90.226.151.36:4444/api/CamServer/alarm", JSON.stringify(payload)).subscribe({
           next: response => {
             this.httpResponse = response;
 
@@ -99,9 +121,41 @@ export class HomeComponent implements OnInit{
         });
       }
 
+      notificationSystem(element, mybool)
+      {
+
+        var payload = new PayloadDto();
+        payload.source = "notificationStatus";
+        payload.payload = "";
+
+        this.httpService.pingServer("http://90.226.151.36:4444/api/CamServer/redis", JSON.stringify(payload)).subscribe({
+          next: response => {
+            this.notificationLabel = response["message"];
+
+          },
+          error: err => this.errorMessage = err
+        });
+      }
+
+      getNotificationSystem()
+      {
+
+        var payload = new PayloadDto();
+        payload.source = "notificationStatus";
+        payload.payload = "";
+
+        this.httpService.simpleGetRequest("http://90.226.151.36:4444/api/CamServer/notification").subscribe({
+          next: response => {
+            this.notificationLabel = response["message"];
+
+          },
+          error: err => this.errorMessage = err
+        });
+      }
+
       setCabinet(element, mybool)
       {
-        this.httpService.simpleGetRequest("http://81.227.13.176:4444/api/CamServer/cabinet").subscribe({
+        this.httpService.simpleGetRequest("http://90.226.151.36:4444/api/CamServer/cabinet").subscribe({
           next: response => {
             this.httpResponse = response;
           },
@@ -112,7 +166,7 @@ export class HomeComponent implements OnInit{
 
       resetCamera(element)
       {
-        this.httpService.simpleGetRequest("http://81.227.13.176:4444/api/CamServer/reset-camera").subscribe({
+        this.httpService.simpleGetRequest("http://90.226.151.36:4444/api/CamServer/reset-camera").subscribe({
           next: response => {
             this.httpResponse = response;
           },
