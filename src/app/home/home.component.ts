@@ -128,7 +128,7 @@ export class HomeComponent implements OnInit{
         payload.source = "notificationStatus";
         payload.payload = "";
 
-        this.httpService.pingServer("http://90.226.151.36:4444/api/CamServer/redis", JSON.stringify(payload)).subscribe({
+        this.httpService.pingServer("http://192.168.1.188:4444/api/CamServer/redis", JSON.stringify(payload)).subscribe({
           next: response => {
             this.notificationLabel = response["message"];
 
@@ -144,7 +144,7 @@ export class HomeComponent implements OnInit{
         payload.source = "notificationStatus";
         payload.payload = "";
 
-        this.httpService.simpleGetRequest("http://90.226.151.36:4444/api/CamServer/notification").subscribe({
+        this.httpService.simpleGetRequest("http://192.168.1.188:4444/api/CamServer/notification").subscribe({
           next: response => {
             this.notificationLabel = response["message"];
 
