@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import * as signalR from "@aspnet/signalr";
 import {BehaviorSubject, Observable} from 'rxjs';
+import { environment } from '../../environments/environment';
 
 export interface ChartModel {
   data: [],
@@ -42,7 +43,7 @@ export class SignalRService {
 //84.217.102.137:4444
                             this.hubConnection = new signalR.HubConnectionBuilder()
     .configureLogging(signalR.LogLevel.Debug)
-    .withUrl("http://192.168.1.188:4444/myhub", {
+    .withUrl(environment.serverUrl, {
       skipNegotiation: true,
       transport: signalR.HttpTransportType.WebSockets
     })

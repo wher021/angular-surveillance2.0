@@ -12,5 +12,5 @@ import { Component } from '@angular/core';
     `
 })
 export class AppComponent {
-  pageTitle: string = 'Acme s ManageWWment';
+  pageTitle: string = 'Home Surveillance';
 }

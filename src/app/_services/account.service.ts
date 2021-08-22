@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { User } from '../_models/user';
+import { environment } from '../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class AccountService {
@@ -23,7 +24,7 @@ export class AccountService {
     }
 
     login(username, password) {
-        return this.http.post<User>(`http://192.168.1.188:4000/users/authenticate`, { username, password })
+        return this.http.post<User>(environment.authenticationUrl, { username, password })
             .pipe(map(user => {
                 // store user details and jwt token in local storage to keep user logged in between page refreshes
                 localStorage.setItem('user', JSON.stringify(user));

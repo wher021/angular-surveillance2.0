@@ -3,7 +3,9 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  authenticationUrl: 'http://192.168.1.188:4000/users/authenticate',
+  serverUrl: 'http://192.168.1.188:4444/myhub'
 };
 
 /*

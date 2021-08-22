@@ -18,7 +18,6 @@ import { LoginComponent } from './account/login.component';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
 import { fakeBackendProvider } from './_helpers/fake-backend';
-import { RegisterComponent } from './account/register.component';
 
 import { SafeHtmlPipe } from './shared/shit'
 
@@ -28,7 +27,6 @@ import { SafeHtmlPipe } from './shared/shit'
     AppComponent,
     WComponent,
     LoginComponent,
-    RegisterComponent,
     HomeComponent,
     SafeHtmlPipe
   ],
@@ -43,7 +41,6 @@ import { SafeHtmlPipe } from './shared/shit'
       { path: 'willy', component: HomeComponent, canActivate: [AuthGuard] },
       { path: 'bajs', component: WComponent },
       { path: 'welcome', component: WelcomeComponent },
-      { path: 'register', component: RegisterComponent },
       { path: '', redirectTo: 'login', pathMatch: 'full' },
       { path: '**', redirectTo: 'login', pathMatch: 'full' }
     ])

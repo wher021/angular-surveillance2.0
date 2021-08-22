@@ -13,16 +13,8 @@ import { PayloadDto } from '../models/payload';
 
 export class HomeComponent implements OnInit{
     user: User;
-    tool: string;
-    products: IFtpResult[] = [];
     errorMessage: string;
-    image1: string;
-    fileStoreActive: boolean;
-    cabinetLight: boolean;
-    sensor1: string;
-    sensor2: string;
     httpResponse: any
-    btnColour: string
     notificationLabel: string;
 
     constructor(private accountService: AccountService, public signalRService: SignalRService, public sanitizer:DomSanitizer, private ftpService:FtpService, private httpService:HttpService ) 
@@ -34,91 +26,13 @@ export class HomeComponent implements OnInit{
         this.getNotificationSystem();
         this.signalRService.startConnection();
         this.signalRService.addTransferChartDataListener();   
-        this.tool = "";
-        this.fileStoreActive = true;
-        this.sensor1 = "off";
-        this.sensor2 = "off";
 
-        this.btnColour= 'red'
 
         this.signalRService.getValue().subscribe((value) => {
-
-          if(value["source"] == "sensor1")
-          {
-            var jsonObj = JSON.parse(value["payload"]);
-            this.sensor1 = jsonObj["status"];
-          }
-          else if(value["source"] == "sensor2")
-          {
-            var jsonObj = JSON.parse(value["payload"]);
-            this.sensor2 = jsonObj["status"];
-          }
-          else if(value["source"] == "alarm")
-          {
-            this.btnColour = value["payload"] == "on" ? "green ": "red";
-          }
 
         });
 
         console.log("SHIT SERVER STARTED");
-      }
-
-      public sendMsg(data: string) 
-      {
-        console.log(event);
-
-        this.signalRService.broadcastChartData(data);        
-      }
-
-      public getAllRecords()
-      {
-        this.tool = "";
-        this.ftpService.getProducts().subscribe({
-          next: products => {
-            this.products = products;
-
-            ///generate html
-            var i = 0;
-            this.products.forEach( (element) => {
-              this.tool += '<a download="shit.jpg" href=' + element.imageUrl + '>Download' + i + '</a>'
-              i++;
-          });
-
-          },
-          error: err => this.errorMessage = err
-        });
-      }
-
-      offAlarm(element, mybool)
-      {
-
-        var payload = new PayloadDto();
-        payload.source = "alarm";
-        payload.payload = "off";
-
-        this.httpService.pingServer("http://90.226.151.36:4444/api/CamServer/alarm",  JSON.stringify(payload)).subscribe({
-          next: response => {
-            this.httpResponse = response;
-
-          },
-          error: err => this.errorMessage = err
-        });
-        //element.disabled = true;
-      }
-      onAlarm(element, mybool)
-      {
-
-        var payload = new PayloadDto();
-        payload.source = "alarm";
-        payload.payload = "on";
-
-        this.httpService.pingServer("http://90.226.151.36:4444/api/CamServer/alarm", JSON.stringify(payload)).subscribe({
-          next: response => {
-            this.httpResponse = response;
-
-          },
-          error: err => this.errorMessage = err
-        });
       }
 
       notificationSystem(element, mybool)
@@ -139,7 +53,6 @@ export class HomeComponent implements OnInit{
 
       getNotificationSystem()
       {
-
         var payload = new PayloadDto();
         payload.source = "notificationStatus";
         payload.payload = "";
@@ -152,46 +65,6 @@ export class HomeComponent implements OnInit{
           error: err => this.errorMessage = err
         });
       }
-
-      setCabinet(element, mybool)
-      {
-        this.httpService.simpleGetRequest("http://90.226.151.36:4444/api/CamServer/cabinet").subscribe({
-          next: response => {
-            this.httpResponse = response;
-          },
-          error: err => this.errorMessage = err
-        });
-        //element.disabled = true;
-      }
-
-      resetCamera(element)
-      {
-        this.httpService.simpleGetRequest("http://90.226.151.36:4444/api/CamServer/reset-camera").subscribe({
-          next: response => {
-            this.httpResponse = response;
-          },
-          error: err => this.errorMessage = err
-        });
-        //element.disabled = true;
-      }
-
-
-      setSaving(element, mybool)
-      {
-
-        //fetch current recording state from server
-        this.fileStoreActive = !this.fileStoreActive;
-        if(!this.fileStoreActive)
-        {
-          element.textContent = "Recording Mode = Off";
-        }
-        else{
-          element.textContent = "Recording Mode = On";
-        }
-
-        //element.disabled = true;
-      }
-    
          //Call this method in the image source, it will sanitize it.
    transform()
    {
