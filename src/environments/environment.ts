@@ -4,8 +4,8 @@
 
 export const environment = {
   production: false,
-  authenticationUrl: 'http://83.253.48.91:4000/users/authenticate',
-  serverUrl: 'http://83.253.48.91:4444/myhub'
+  authenticationUrl: 'http://192.168.1.188:4000/users/authenticate',
+  serverUrl: 'http://192.168.1.188:4444/myhub'
 };
 
 /*
