@@ -4,8 +4,9 @@
 
 export const environment = {
   production: false,
-  authenticationUrl: 'http://192.168.1.188:4000/users/authenticate',
-  serverUrl: 'http://192.168.1.188:4444/myhub'
+  authenticationUrl: 'http://83.251.233.94:4000/users/authenticate',
+  serverUrl: 'http://83.251.233.94:4444/myhub',
+  notification: 'http://83.251.233.94:4444/api/CamServer/'
 };
 
 /*

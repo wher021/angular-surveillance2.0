@@ -8,6 +8,7 @@ import { IFtpResult } from '../ftp/ftp.result';
 import { HttpService } from '../_services/http.service';
 
 import { PayloadDto } from '../models/payload';
+import { environment } from '../../environments/environment';
 
 @Component({ templateUrl: 'home.component.html' })
 
@@ -42,7 +43,7 @@ export class HomeComponent implements OnInit{
         payload.source = "notificationStatus";
         payload.payload = "";
 
-        this.httpService.pingServer("http://192.168.1.188:4444/api/CamServer/redis", JSON.stringify(payload)).subscribe({
+        this.httpService.pingServer(environment.notification + "redis", JSON.stringify(payload)).subscribe({
           next: response => {
             this.notificationLabel = response["message"];
 
@@ -57,7 +58,7 @@ export class HomeComponent implements OnInit{
         payload.source = "notificationStatus";
         payload.payload = "";
 
-        this.httpService.simpleGetRequest("http://192.168.1.188:4444/api/CamServer/notification").subscribe({
+        this.httpService.simpleGetRequest(environment.notification + "notification").subscribe({
           next: response => {
             this.notificationLabel = response["message"];
 
