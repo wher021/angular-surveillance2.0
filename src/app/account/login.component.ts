@@ -11,6 +11,8 @@ export class LoginComponent implements OnInit {
     loading = false;
     submitted = false;
     returnUrl: string;
+    validation = false;
+    htmlStr: string = '';
 
     constructor(
         private formBuilder: FormBuilder,
@@ -32,6 +34,11 @@ export class LoginComponent implements OnInit {
     // convenience getter for easy access to form fields
     get f() { return this.form.controls; }
 
+    onFocus(): void {
+        this.htmlStr = "";
+        this.validation = false;
+    }
+
     onSubmit() {
         this.submitted = true;
 
@@ -50,6 +57,8 @@ export class LoginComponent implements OnInit {
             error => {
                 //this.alertService.error(error);
                 this.loading = false;
+                this.validation = true
+                this.htmlStr = "Wrong username or password please try again";
             });
         //this.router.navigate(['/willy']);
             // .subscribe(
