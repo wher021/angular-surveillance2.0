@@ -4,7 +4,8 @@
         <form [formGroup]="form" (ngSubmit)="onSubmit()">
             <div class="form-group">
                 <label for="username">Username</label>
-                <input type="text" formControlName="username" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.username.errors }" />
+                <input type="text" formControlName="username" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.username.errors }" (focus) = 'onFocus()' />
+                <div [innerHTML]="htmlStr" *ngIf="submitted && validation" style="color:red;"></div>
                 <div *ngIf="submitted && f.username.errors" class="invalid-feedback">
                     <div *ngIf="f.username.errors.required">Username is required</div>
                 </div>
@@ -21,7 +22,6 @@
                     <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
                     Login
                 </button>
-                <a routerLink="../register" class="btn btn-link">Register</a>
             </div>
         </form>
     </div>
